@@ -1,0 +1,47 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "5.73.0"
+    }
+  }
+  required_version = "1.9.8"
+}
+
+locals {
+  instance_type_t2nano = "t2.nano"
+  ami_ubuntu = "ami-06b21ccaeff8cd686"
+}
+
+provider "aws" {
+  profile = "default"
+  region  = "us-east-1"
+}
+
+resource "aws_instance" "TerraformTestings1" {
+  ami           = data.aws_ami.amazon_linux.id
+  instance_type = local.instance_type_t2nano
+
+  tags = {
+    Name = "testingAutomasiTerraform1"
+  }
+}
+
+resource "aws_instance" "TerraformTestings2" {
+  ami           = data.aws_ami.amazon_linux.id
+  instance_type = local.instance_type_t2nano
+
+  tags = {
+    Name = "testingAutomasiTerraform2"
+  }
+}
+
+# AMI Data block
+data "aws_ami" "amazon_linux" {
+  most_recent = true
+  owners      = ["amazon"]
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
+}
